@@ -36,43 +36,53 @@ function listTheOrders()
 // Calculates all the discounts
 function calculateDiscount($order)
 {
-   
+    // Checks how many different items of serie 1/A there are
+    $differentSeriesAAmount = 0;
+    $differentSeriesA = array();
+
     // Checks the order for which items ordered. Products starting with serial 'A' or 'B'
+    // Adds amount of free items for serial 2/B
     foreach ($order['items'] as &$product) {
         switch (substr($product['product-id'], 0, 1)) {
             case 'A':
-                discountProduct1($product);
+                $differentSeriesAAmount++;
+                array_push($differentSeriesA, $product);
                 break;
             case 'B':
-                $discounts = discountProduct2($product);
+                $discounts = discountProductB($product);
                 $product = $discounts[0];
                 break;
             default:
                 var_dump("Item does not exist");
                 break;
         }
-    } 
-    
-    var_dump($order);
+    }
+    var_dump($differentSeriesA);
+    // Executes discount for Series 1/A if more than 2 different items
+    if ($differentSeriesAAmount >= 2) {
+        discountProductA($differentSeriesA);
+    }
 
-}
+    // Executes company discount if applicable
+    // discountTotal();
+/*     var_dump($order);
+ */}
 
 // Discount for 1/A series products
-function discountProduct1($product)
+function discountProductA($productsBought)
 {
-    $discountCategory1 = array();
-    $products = retrieveJSON('products');
-    $differentItems = 0;
+    // COMPARE WHICH HAS THE LOWEST UNIT PRICE!!!
+   foreach($productsBought as $product){
 
-    foreach ($products as $item) {
-        if ($item['id'] === $product) {
-        }
-    }
-    var_dump($product);
-    return $discountCategory1;
+   } 
+
+    
+
+        /* var_dump($products); */
 }
+
 // Discount for 2/B series products
-function discountProduct2($product)
+function discountProductB($product)
 {
     $discountCategory2 = array();
     $products = retrieveJSON('products');
@@ -83,11 +93,11 @@ function discountProduct2($product)
             $quantity /= 5;
             array_push($discountCategory2, $product);
             $discountCategory2[0]['free'] = $quantity;
-            var_dump($discountCategory2);
         }
     }
     return $discountCategory2;
 }
+
 // Discount for great customers
 function discountTotal()
 {
