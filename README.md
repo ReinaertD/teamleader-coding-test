@@ -10,6 +10,7 @@ It will work..... probably.
 
 ## Sidenotes
 Not optimal at all.
+Didn't think about using classes till near the end.
 
 ## Logic
 
