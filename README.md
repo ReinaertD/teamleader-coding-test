@@ -4,6 +4,10 @@
 Visual Studio Code
 Bootstrap framework for quick design
 
+## How to
+Just makes sure you are running a web server like apache2. Clone the files in it and run it.
+It will work..... probably.
+
 ## Sidenotes
 Not optimal at all.
 
@@ -42,6 +46,8 @@ Not optimal at all.
         
 
 4- Display final price
+    - Save as .json file
+    - Print results on index.php
 
 
  

@@ -1,4 +1,5 @@
 <?php
+include_once 'controller/view.php';
 include_once 'controller/controller.php';
 ?>
 
@@ -24,7 +25,7 @@ include_once 'controller/controller.php';
                 <div class="form-group d-flex justify-content-center">
                     <select name="order" required>
                         <option value="" disabled selected hidden>Select your order</option>
-                        <?php 
+                        <?php
                         // lists the orders
                         listTheOrders();
                         ?>
@@ -33,6 +34,13 @@ include_once 'controller/controller.php';
                 <!-- Posts data and calculates -->
                 <button class="btn btn-light">Calculate your discount</button>
             </form>
+
+        </div>
+        <div class="d-flex flex-column justify-content-center text-center">
+            <?php if (isset($_POST['order'])) {
+                showData($order);
+            } ?>
+
         </div>
     </div>
 </body>
