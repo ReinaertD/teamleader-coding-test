@@ -50,4 +50,10 @@ Not optimal at all.
     - Print results on index.php
 
 
+## Add a discount?
+Add the function in the discounts.php.
+Put it in the calculateDiscount function in the right order.
+Adjust view.php with the new discount information.
+
+
  
