@@ -14,9 +14,11 @@ Not optimal at all.
 ## Logic
 
 1- Import orders
+
     - Choose order(scandir?)
 
 2- Recieve order and acquire the company and product data
+
     - Retrieve order data
     - Retrieve the rest of the relevant data related to that order
     - Send relevant data to next task
@@ -44,16 +46,19 @@ Not optimal at all.
         Checks if above 1000
         If so, recalculate total price with 10% discount
         
+        
 
 4- Display final price
+
     - Save as .json file
     - Print results on index.php
 
 
 ## Add a discount?
-Add the function in the discounts.php.
-Put it in the calculateDiscount function in the right order.
-Adjust view.php with the new discount information.
+
+- Add the function in the discounts.php.
+- Put it in the calculateDiscount function in the right order.
+- Adjust view.php with the new discount information.
 
 
  
