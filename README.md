@@ -4,6 +4,9 @@
 Visual Studio Code
 Bootstrap framework for quick design
 
+## Sidenotes
+Not optimal at all.
+
 ## Logic
 
 1- Import orders

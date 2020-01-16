@@ -3,11 +3,10 @@
 // Executes if a POST method of order has been executed 
 if (isset($_POST['order'])) {
 
-    // Gets the request and turns the order into an object array
+    // Gets the request and decodes the json
     $requestedOrder = $_POST['order'] . ".json";
     $request = file_get_contents("example-orders/" . $requestedOrder);
     $order = json_decode($request, true);
-    /*     var_dump($order); */
     calculateDiscount($order);
 }
 
@@ -39,6 +38,8 @@ function calculateDiscount($order)
     // Checks how many different items of serie 1/A there are
     $differentSeriesAAmount = 0;
     $differentSeriesA = array();
+    // Assigns recalculated total to the array
+    $order['recalculated-total'] = $order['total'];
 
     // Checks the order for which items ordered. Products starting with serial 'A' or 'B'
     // Adds amount of free items for serial 2/B
@@ -57,28 +58,38 @@ function calculateDiscount($order)
                 break;
         }
     }
-    var_dump($differentSeriesA);
     // Executes discount for Series 1/A if more than 2 different items
     if ($differentSeriesAAmount >= 2) {
-        discountProductA($differentSeriesA);
+        $order['discount-series-A'] = discountProductA($differentSeriesA);
+        $order['recalculated-total'] = $order['total'] - $order['discount-series-A']['0'];
     }
-
     // Executes company discount if applicable
-    // discountTotal();
-/*     var_dump($order);
- */}
+    $order['discount-company'] = valuedCustomer($order['customer-id']);
+    if($order['discount-company']['discount'] === true){
+        $order = valuedCustomerDiscount($order);
+    }
+    var_dump($order);
+}
+
+
 
 // Discount for 1/A series products
 function discountProductA($productsBought)
 {
-    // COMPARE WHICH HAS THE LOWEST UNIT PRICE!!!
-   foreach($productsBought as $product){
-
-   } 
-
-    
-
-        /* var_dump($products); */
+    // Gets the price per unit of the first product and declares the discount in PERCENTAGE
+    $discountItem = array($productsBought[0]['unit-price'],$productsBought[0]['product-id']);
+    $discount = 20;
+    // Compares which has the lowest price and assigns the lowest price and product-id to an array
+    foreach ($productsBought as &$product) {
+        if ($discountItem[0] > $product['unit-price']) {
+            $discountItem[0] = $product['unit-price'];
+            $discountItem[1] = $product['product-id'];
+        }
+    }
+    // Calculates the discount
+    $discountItem[0] = ($discountItem[0] / 100) * $discount;
+    // Returns the discount and the item-id the discount is on
+    return $discountItem;
 }
 
 // Discount for 2/B series products
@@ -98,12 +109,35 @@ function discountProductB($product)
     return $discountCategory2;
 }
 
-// Discount for great customers
-function discountTotal()
+// Checks if it is a valued customer 
+function valuedCustomer($customerID)
 {
-    $customers = retrieveJSON('customers');
-    // Returns bool true or false.
+    $clients = retrieveJSON('customers');
+    $customer = array();
+    // Checks if the client has got the company more than 1000 revenue and adds them to the array
+    foreach($clients as $client){
+        if ($client['id'] === $customerID && $client['revenue'] >= 1000){
+            $customer['customer'] = $client;
+            $customer['discount'] = true;
+        } else if($client['id'] === $customerID) {
+            $customer['customer'] = $client;
+            $customer['discount'] = false;
+        }
+    }
+    // Returns the array with the company and with a bool whether it gets the discount or not
+    return $customer;
 }
+
+function valuedCustomerDiscount($order){
+    // Discount in PERCENTAGE
+    $discount = 10;
+    $finalPrice = $order['recalculated-total']-(($order['recalculated-total'] /100) * $discount);
+    $order['recalculated-total'] =  round($finalPrice,2);
+
+    return $order;
+}
+
+
 
 // Retrieves the relevant json file.
 function retrieveJSON($json)
